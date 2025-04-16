@@ -16,4 +16,3 @@ build:
     - pip install git+https://github.com/open-mmlab/mmagic.git
 
 predict: "predict.py:Predictor"
-gpu: true
