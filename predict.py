@@ -25,12 +25,26 @@ class Predictor(BasePredictor):
     def predict(
         self,
         prompt: str = Input(description="The input text prompt"),
-        seed: int = Input(default=42, description="Random seed"),
-        num_inference_steps: int = Input(default=50, description="Sampling steps")
+        negative_prompt: str = Input(default="", description="Text to avoid in the output"),
+        height: int = Input(default=512, ge=64, le=1024, description="Height of output image"),
+        width: int = Input(default=512, ge=64, le=1024, description="Width of output image"),
+        guidance_scale: float = Input(default=7.5, ge=0.0, le=20.0, description="Classifier-free guidance scale"),
+        num_inference_steps: int = Input(default=50, ge=1, le=100, description="Sampling steps"),
+        seed: int = Input(default=42, description="Random seed for reproducibility"),
+        sampler: str = Input(default="ddim", choices=["ddim", "dpm", "euler", "pndm"], description="Sampling algorithm")
     ) -> Path:
-        result = infer(self.model, prompt=prompt, seed=seed, num_inference_steps=num_inference_steps)
+        result = infer(
+            self.model,
+            prompt=prompt,
+            negative_prompt=negative_prompt,
+            height=height,
+            width=width,
+            seed=seed,
+            guidance_scale=guidance_scale,
+            num_inference_steps=num_inference_steps,
+            sampler=sampler
+        )
         image: Image.Image = result["images"][0]
-
         out_path = f"/tmp/{uuid.uuid4().hex}.png"
         image.save(out_path)
         return Path(out_path)
