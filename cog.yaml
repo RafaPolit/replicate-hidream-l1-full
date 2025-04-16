@@ -1,4 +1,9 @@
+name: hidream-l1-full
+description: HiDream model for generating text-to-image results
+version: "1.0"
+
 build:
+  gpu: true
   python_version: "3.10"
   system_packages:
     - "libgl1-mesa-glx"
@@ -11,3 +16,4 @@ build:
     - pip install git+https://github.com/open-mmlab/mmagic.git
 
 predict: "predict.py:Predictor"
+gpu: true
